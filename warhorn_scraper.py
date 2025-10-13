@@ -117,13 +117,13 @@ def main():
 
     for location in sorted(grouped.keys()):
         print()
-        print(f"=== {location} ===")
+        print(f"__**=== {location} ===**__")
         for entry in grouped[location]:
             title = re.sub(r"\[[^\]]*\]|\([^\)]*\)|\{[^\}]*\}", "", entry['title']).strip()
             if entry['open_seats'] == 1:
-                print(f"  {title} - {entry['open_seats']} seat left")
+                print(f"* **{title}** - {entry['open_seats']} seat left")
             else:
-                print(f"  {title} - {entry['open_seats']} seats left")
+                print(f"* **{title}** - {entry['open_seats']} seats left")
 if __name__ == "__main__":
     main()
     print()
