@@ -1,0 +1,47 @@
+
+import requests
+import feedparser
+from datetime import date, datetime, timezone
+from collections import defaultdict
+from warhorn_scraper import fetch_feed, parse_entry
+
+FEED_URL = "https://warhorn.net/events/rpg-night-utrecht/schedule/Sef-unkZyzF-7vzRibjR.atom"
+
+def BierkantineGuests():
+    feed = fetch_feed(FEED_URL)
+    today = datetime.now(timezone.utc).date()
+    entries_by_date = defaultdict(list)
+    for entry in feed.entries:
+        info = parse_entry(entry)
+        if info['date']:
+            entries_by_date[info['date'].date()].append(info)
+    # Find first date with entries, including today
+    sorted_dates = sorted(entries_by_date.keys())
+    first_date = None
+    for d in sorted_dates:
+        if d >= today:
+            first_date = d
+            break
+    if not first_date:
+        print("No entries for today or future dates.")
+        return
+    
+    # Format first_date as 'dd Month' with full month name
+    first_date_readable = first_date.strftime('%A %d %B')
+    print(f"We verwachten de volgende groepen:")
+    # Group entries by location
+    import re
+    grouped = defaultdict(list)
+    for entry in entries_by_date[first_date]:
+        location = entry['location'] or ""
+        if location.startswith("Subcultures @"):
+            location = location[len("Subcultures @"):].strip()
+        grouped[location].append(entry)
+
+    for location in sorted(grouped.keys()):
+        print()
+        print(f"__**=== {location} ===**__")
+        for entry in grouped[location]:
+            print(f"{entry['player_signed_in']+entry['dm_signed_in']} gasten")
+
+BierkantineGuests()

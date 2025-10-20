@@ -103,7 +103,7 @@ def main():
     # Format first_date as 'dd Month' with full month name
     first_date_readable = first_date.strftime('%A %d %B')
     print(f"# RPG Night Utrecht - {first_date_readable}")
-    print(f"## Open seats for great games:")
+    print(f"## Great games with open seats for @everyone:")
     # Group entries by location
     import re
     grouped = defaultdict(list)
